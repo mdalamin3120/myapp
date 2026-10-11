@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCQ · Developed by MD ALAMIN</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1a1a;--muted:#555;--paper:#faf8f3;--ans:#0b5d1e;--blue:#1a56db}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Serif Bengali","Kalpurush","SolaimanLipi","Hind Siliguri",Georgia,serif;background:#e8e4dc;color:var(--ink)}
+.stage{max-width:980px;margin:10px auto 14px;padding:0 10px}
+.page{background:var(--paper);border:1px solid #ccc;box-shadow:0 4px 20px rgba(0,0,0,.12);position:relative;padding-bottom:16px}
+.phead{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;padding:8px 12px;border-bottom:1.5px dotted #333;font:12px system-ui,"Noto Serif Bengali",sans-serif;color:#333}
+.hl{display:flex;align-items:center;gap:8px;position:relative;min-width:0}
+.gear{border:0;background:#2c2c2c;color:#fff;border-radius:8px;font-size:17px;line-height:1;padding:6px 8px;cursor:pointer;flex:none}
+#stat{font-size:11px;line-height:1.3}
+#stat a{color:var(--blue);text-decoration:underline;cursor:pointer}
+.hc{font-size:11px;color:#444;text-align:center;white-space:nowrap}
+.hr{display:flex;justify-content:flex-end;align-items:center;gap:4px;font-size:12px;white-space:nowrap}
+.nv{border:0;background:none;color:var(--blue);font-size:22px;line-height:1;padding:0 4px;cursor:pointer;font-weight:700}
+.nv:disabled{opacity:.3;cursor:default}
+.panel{display:none;position:absolute;left:0;top:calc(100% + 8px);z-index:60;background:#2c2c2c;color:#eee;padding:14px;border-radius:10px;width:252px;max-width:calc(100vw - 24px);flex-direction:column;gap:10px;font:13px system-ui,"Noto Serif Bengali",sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.panel.open{display:flex}
+.panel label{display:flex;gap:6px;align-items:center}
+.panel button{background:#4a90d9;color:#fff;border:0;border-radius:6px;padding:7px 10px;cursor:pointer;font:13px inherit;font-family:inherit}
+.panel input[type=file]{max-width:100%;color:#ddd;font-size:12px}
+.panel input[type=number]{width:54px}
+.panel hr{width:100%;border:0;border-top:1px solid #555;margin:0}
+#busy{font-size:12px;color:#ffd}
+.subjbar{display:flex;gap:6px;overflow-x:auto;padding:8px 10px;border-bottom:1px solid #ddd;font:12px system-ui,"Noto Serif Bengali",sans-serif;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.subjbar[hidden]{display:none}
+.chip{flex:none;border:1px solid #bbb;background:#fff;color:#333;border-radius:999px;padding:4px 11px;cursor:pointer;font:inherit;white-space:nowrap}
+.chip small{opacity:.7;margin-left:4px;font-size:.9em}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+@media(min-width:701px){.subjbar{flex-wrap:wrap;overflow-x:visible}}
+.columns{display:grid;grid-template-columns:1fr 1fr;position:relative;padding-top:14px;align-items:start}
+.columns::before{content:"";position:absolute;top:0;bottom:0;left:50%;border-left:1px solid #333}
+.columns.e::before{display:none}
+.empty{grid-column:1/-1;text-align:center;padding:60px 16px;color:#666;font-size:15px}
+.col{min-width:0}
+.col-left{padding:0 20px 0 26px}.col-right{padding:0 26px 0 20px}
+.q{margin-bottom:14px;font-size:13.5px;line-height:1.55;break-inside:avoid}
+.q-head{font-weight:600}.q-num{font-weight:700;margin-right:2px}
+.q-src{font-size:11px;color:var(--muted);font-weight:400}
+.review-badge{font-size:10px;background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:3px;padding:0 4px;margin-left:4px;font-family:system-ui,sans-serif;font-weight:600}
+.opts-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px 8px;margin:3px 0}
+.opts-grid .opt{font-size:13px;line-height:1.45;min-width:0;overflow:hidden;white-space:nowrap}
+.opts-grid.one{grid-template-columns:minmax(0,1fr)}
+.opts-grid.one .opt{white-space:normal;overflow:visible}
+.opts-grid .opt:last-child{display:flex;gap:4px;align-items:flex-start}
+.opts-grid:not(.one) .opt:last-child:nth-child(odd){grid-column:1/-1}
+.opt .ot{min-width:0}
+.opt .ans{margin-left:auto;padding-left:8px;flex:none;white-space:nowrap;font-weight:700;color:var(--ans);font-size:13px}
+.ans.hide{display:none}
+.opt.exam{cursor:pointer;display:flex;gap:4px;align-items:flex-start;padding:1px 0}
+.bub{flex:none;display:inline-flex;align-items:center;justify-content:center;width:1.6em;height:1.6em;border:1.5px solid #333;border-radius:50%;background:#fff;color:#333;font-size:.85em;font-weight:600;line-height:1}
+.opt.sel .bub{background:#222;color:#fff}
+.opt.right .bub,.bub.right{background:var(--ans);border-color:var(--ans);color:#fff}
+.opt.wrong .bub{background:#b00020;border-color:#b00020;color:#fff}
+.opt.right{color:var(--ans);font-weight:600}.opt.wrong{color:#b00020}
+.tbw{margin:5px 0 0;overflow-x:auto}
+.tb{border-collapse:collapse;width:100%;font-size:12px;line-height:1.4;background:#fff}
+.tb th,.tb td{border:1px solid #bbb;padding:2px 5px;text-align:left;vertical-align:top}
+.tb th{background:#ece8dd;font-weight:700}
+.cap .tb{font-size:11.5px}
+@media(max-width:700px){.tb{font-size:10px}.tb th,.tb td{padding:1px 3px}}
+.exp{margin:4px 0 0;padding:4px 6px;border-left:2px solid #bbb;background:#f1eee6;font-size:12px;line-height:1.5;font-weight:400}
+.exp>b{display:block;margin-bottom:2px}
+.eo{display:flex;gap:5px;align-items:flex-start;margin:2px 0}.eo .bub{font-size:.8em}.eo>span:last-child{min-width:0}
+.examBar{position:sticky;bottom:0;z-index:40;background:#2c2c2c;color:#fff;display:flex;justify-content:space-between;align-items:center;padding:8px 14px;font:13px system-ui,sans-serif}
+.examBar[hidden]{display:none}
+.examBar button,.card button{border:0;border-radius:8px;padding:8px 12px;font:600 13px system-ui,"Noto Serif Bengali",sans-serif;cursor:pointer;background:#0b5d1e;color:#fff}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:12px}
+.modal[hidden]{display:none}
+.card{background:#fff;border-radius:14px;padding:16px;width:100%;max-width:560px;max-height:92vh;overflow:auto;font-family:system-ui,"Noto Serif Bengali",sans-serif;-webkit-overflow-scrolling:touch}
+.card h2{margin:0 0 6px;font-size:17px}
+.card .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.card .btns .alt{background:#555}.card .btns .bl{background:#4a90d9}
+.sum{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;margin:10px 0}
+.sum div{border-radius:8px;padding:6px 2px;font-size:11px}.sum b{font-size:19px;display:block}
+.g1{background:#e3f4e7;color:var(--ans)}.g2{background:#fde4e8;color:#b00020}.g3{background:#eee;color:#555}.g4{background:#e4edfb;color:var(--blue)}
+.rr{border:1px solid #ddd;border-left-width:4px;border-radius:8px;padding:8px;margin:8px 0;font-size:13px;line-height:1.5}
+.rr.ok{border-left-color:var(--ans)}.rr.bad{border-left-color:#b00020}.rl{font-size:12px;color:#444;margin-top:3px}
+.re{border:1px solid #ccc;border-radius:8px;padding:8px;margin:8px 0}
+.re textarea,.re input:not([type=checkbox]),.re select{width:100%;margin:3px 0;font:13px "Noto Serif Bengali",system-ui,sans-serif;padding:5px;border:1px solid #bbb;border-radius:6px}
+.re textarea{min-height:48px}
+#imgEl{max-width:100%;border:1px solid #ccc}
+.cap{position:fixed;left:-10000px;top:0;width:794px}
+.cap .phead{grid-template-columns:1fr auto}
+.cap .q{font-size:13.5px;line-height:1.55;margin-bottom:14px}.cap .opts-grid .opt,.cap .opt .ans{font-size:13px}
+.cap .col-left{padding:0 20px 0 26px}.cap .col-right{padding:0 26px 0 20px}.cap .exp{font-size:12px}.cap .q-src{font-size:11px}
+@media(max-width:700px){
+ .stage{padding:0 6px}.phead{padding:6px 8px;gap:4px}
+ .col-left{padding:0 8px 0 10px}.col-right{padding:0 10px 0 8px}
+ .q{font-size:11.5px;line-height:1.5;margin-bottom:10px}
+ .opts-grid{gap:0 6px}.opts-grid .opt,.opt .ans{font-size:11px;line-height:1.4}
+ .q-src{font-size:9.5px}.exp{font-size:10.5px}.hc,#stat{font-size:10px}.hr{font-size:11px}
+}
+</style>
+</head>
+<body>
+<div class="stage"><div class="page">
+ <div class="phead">
+  <div class="hl">
+   <button type="button" class="gear" id="btnGear" aria-label="সেটিংস">⚙️</button>
+   <span id="stat"></span>
+   <div class="panel" id="panel">
+    <label>JSON: <input type="file" id="file" accept=".json,application/json"></label>
+    <div style="font-size:11px;color:#aaa;margin-top:-4px">লোড করা JSON এই ডিভাইসে সেভ থাকে <a href="#" id="clrDb" style="color:#8ec5ff">(মুছুন)</a></div>
+    <label><input type="checkbox" id="examMode"> 📝 এক্সাম মোড</label>
+    <label><input type="checkbox" id="showAns" checked> উত্তর দেখাও</label>
+    <label><input type="checkbox" id="showTbl" checked> 📋 টেবিল দেখাও <span id="tblCnt" style="color:#aaa;font-size:11px"></span></label>
+    <label><input type="checkbox" id="showExp"> ব্যাখ্যা দেখাও <span id="expCnt" style="color:#aaa;font-size:11px"></span></label>
+    <div id="keysInfo" style="font-size:11px;color:#aaa;margin-top:-6px"></div>
+    <label><input type="checkbox" id="showSrc" checked> পরীক্ষার সূত্র</label>
+    <label><input type="checkbox" id="showReview"> Review মার্ক</label>
+    <label>প্রতি পেজ: <select id="perPage"><option value="8">৮</option><option value="10" selected>১০</option><option value="12">১২</option><option value="14">১৪</option><option value="16">১৬</option><option value="20">২০</option></select></label>
+    <label>নেগেটিভ মার্ক: <select id="negMark"><option value="0">০</option><option value="0.25">০.২৫</option><option value="0.5">০.৫</option></select></label>
+    <hr>
+    <button type="button" id="btnPdf">📄 সব পেজ PDF</button>
+    <label>পেজ <input type="number" id="imgPg" min="1" value="1"> <button type="button" id="btnImg">🖼️ ইমেজ সেভ</button></label>
+    <div id="busy"></div>
+   </div>
+  </div>
+  <div class="hc" id="range"></div>
+  <div class="hr"><button type="button" class="nv" id="prev" aria-label="আগের পেজ">←</button><span id="pnum"></span><button type="button" class="nv" id="next" aria-label="পরের পেজ">→</button></div>
+ </div>
+ <div class="subjbar" id="subjBar" hidden></div>
+ <div class="columns e" id="cols"><div class="empty">⚙️ সেটিং থেকে JSON ফাইল আপলোড করুন</div></div>
+</div></div>
+
+<div class="examBar" id="examBar" hidden><span id="exCount"></span><button type="button" id="btnSubmit">✅ সাবমিট এক্সাম</button></div>
+
+<div class="modal" id="resModal" hidden><div class="card">
+ <h2>📊 পরীক্ষার ফলাফল</h2><div id="resBody"></div>
+ <div class="btns"><button type="button" class="bl" id="btnReview">📖 বইয়ে দেখুন</button><button type="button" class="alt" id="btnRetry">🔄 আবার দিন</button></div>
+</div></div>
+
+<div class="modal" id="revModal" hidden><div class="card">
+ <h2>রিভিউ প্রশ্ন (এডিট করা যাবে)</h2><div id="revBody"></div>
+ <div class="btns"><button type="button" class="bl" id="revSave">💾 JSON ডাউনলোড</button><button type="button" class="alt" id="revClose">বন্ধ</button></div>
+</div></div>
+
+<div class="modal" id="imgModal" hidden><div class="card">
+ <h2>ইমেজ প্রস্তুত <small id="imgInfo"></small></h2>
+ <img id="imgEl" alt="পেজ"><p style="font-size:12px;color:#555">ছবিতে লং-প্রেস করেও ফটোজে সেভ করা যায়।</p>
+ <div class="btns"><button type="button" class="bl" id="imgShare">📲 ফটোজ/গ্যালারিতে সেভ</button><button type="button" id="imgDl">⬇️ ডাউনলোড</button><button type="button" class="alt" id="imgClose">বন্ধ</button></div>
+</div></div>
+
+<div class="modal" id="pdfModal" hidden><div class="card">
+ <h2>📄 PDF প্রস্তুত <small id="pdfInfo"></small></h2>
+ <div class="btns"><button type="button" class="bl" id="pdfShare">📲 শেয়ার / ফাইলসে সেভ</button><button type="button" id="pdfDl">⬇️ ডাউনলোড</button><button type="button" class="alt" id="pdfClose">বন্ধ</button></div>
+</div></div>
+
+<script>
+const LETTERS=['ক','খ','গ','ঘ','ঙ','চ','ছ','জ'];
+let DATA=[],VIEW=[],SUBJ='',pageIdx=0,SUBMITTED=false,TOPIC='';
+const SEL={};
+const $=id=>document.getElementById(id);
+const bn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const clean=o=>String(o).replace(/^\s*[(\[]?[কখগঘঙচছজ0-9]+[)\].:：\s-]+/u,'').trim()||String(o);
+const perPage=()=>parseInt($('perPage').value,10)||10;
+const totalPages=()=>Math.max(1,Math.ceil(VIEW.length/perPage()));
+const answered=()=>VIEW.filter(q=>SEL[q._serial]!==undefined).length;
+const clearSel=()=>Object.keys(SEL).forEach(k=>delete SEL[k]);
+
+/* subjects: group by tags.subject, filter view */
+const SUBJ_ALIAS={'math':'গণিত','mathematics':'গণিত','गणित':'গণিত','english':'ইংরেজি','english analogy':'ইংরেজি','english translation':'ইংরেজি',
+ 'bangla':'বাংলা','bengali':'বাংলা','literature':'বাংলা','বাংলা সাহিত্য':'বাংলা','বাংলা ব্যাকরণ':'বাংলা','bangla grammar':'বাংলা',
+ 'general knowledge':'সাধারণ জ্ঞান','general':'সাধারণ জ্ঞান','gk':'সাধারণ জ্ঞান',
+ 'bangladesh affairs':'বাংলাদেশ বিষয়াবলী','international affairs':'আন্তর্জাতিক বিষয়াবলী',
+ 'ict':'কম্পিউটার ও তথ্যপ্রযুক্তি','আইসিটি':'কম্পিউটার ও তথ্যপ্রযুক্তি','computer':'কম্পিউটার ও তথ্যপ্রযুক্তি','computer and it':'কম্পিউটার ও তথ্যপ্রযুক্তি',
+ 'science':'বিজ্ঞান','accounting':'হিসাববিজ্ঞান','economics':'অর্থনীতি','management':'ব্যবস্থাপনা','sports':'খেলাধুলা'};
+function subjOf(q){
+  let s=q.tags&&typeof q.tags==='object'?q.tags.subject:null;
+  if(s==null||s==='')s=q.subject;
+  if(Array.isArray(s))s=s[0];
+  s=String(s==null?'':s).normalize('NFC').replace(/[\u200c\u200d]/g,'').trim();
+  if(!s)return'অন্যান্য';
+  return SUBJ_ALIAS[s.toLowerCase()]||s;
+}
+function subjList(){const m=new Map();DATA.forEach(q=>{const s=subjOf(q);m.set(s,(m.get(s)||0)+1);});return m;}
+function applyView(){
+  if(SUBJ&&!subjList().has(SUBJ))SUBJ='';
+  VIEW=SUBJ?DATA.filter(q=>subjOf(q)===SUBJ):DATA.slice();
+  VIEW.forEach((q,i)=>{q._no=i+1;});
+}
+function renderSubj(){
+  const bar=$('subjBar'),m=subjList(),sl=bar.scrollLeft;
+  if(m.size<2){bar.hidden=true;bar.innerHTML='';return;}
+  let h=`<button type="button" class="chip${SUBJ?'':' on'}" data-s="">সব বিষয়<small>${bn(DATA.length)}</small></button>`;
+  m.forEach((n,s)=>{h+=`<button type="button" class="chip${s===SUBJ?' on':''}" data-s="${esc(s)}">${esc(s)}<small>${bn(n)}</small></button>`;});
+  bar.innerHTML=h;bar.hidden=false;bar.scrollLeft=sl;
+}
+function setSubj(s){
+  SUBJ=s;pageIdx=0;render();
+  try{dbSet('subj',SUBJ).catch(()=>{});}catch(_){}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+$('subjBar').addEventListener('click',e=>{const b=e.target.closest('.chip');if(b)setSubj(b.dataset.s);});
+
+function fmtSrc(ex){
+  if(!ex||!ex.length)return'';
+  return ex.map(e=>{let s=e.post||'';
+    if(e.year!=null&&e.year!==''){const y=String(e.year);s+=': '+bn(/^\d{4}$/.test(y)?y.slice(2):y);}
+    return s;}).join(' / ');
+}
+const norm=s=>String(s).replace(/[^\p{L}\p{N}]/gu,'').toLowerCase();
+function fmtAny(v){
+  if(v==null)return'';
+  if(typeof v!=='object')return String(v);
+  if(Array.isArray(v))return v.map(fmtAny).filter(Boolean).join(' ');
+  return Object.entries(v).map(([k,x])=>{const t=fmtAny(x);return t?k+': '+t:'';}).filter(Boolean).join(' | ');
+}
+function pick(v){
+  if(v==null)return'';
+  if(typeof v!=='object')return String(v);
+  if(Array.isArray(v))return v.map(pick).filter(Boolean).join(' ');
+  const t=v.exp??v.explanation??v.text??v['ব্যাখ্যা'];
+  return t!=null?pick(t):fmtAny(v);
+}
+const KNOWN=new Set(['id','q','question','options','answer','tags','needs_review','_serial','_no','source','page','table']);
+const EXPRE=/exp|ব্যাখ|explan|solution|reason|note|detail|descr|ভাষ্য/i;
+const nonEmpty=v=>!(v==null||v===''||(typeof v==='object'&&!Object.keys(v).length));
+function getExp(q){
+  for(const src of [q,q.tags&&typeof q.tags==='object'?q.tags:{}])
+    for(const k of Object.keys(src)){
+      if(src===q&&KNOWN.has(k))continue;
+      if(EXPRE.test(k)&&nonEmpty(src[k]))return src[k];
+    }
+  for(const k of Object.keys(q)){
+    if(KNOWN.has(k))continue;const v=q[k];
+    if(nonEmpty(v)&&(typeof v==='object'||String(v).length>12))return v;
+  }
+  return null;
+}
+function expFor(q,i){
+  const e=getExp(q);if(e==null)return'';
+  if(typeof e!=='object')return i===q.answer?String(e):'';
+  if(Array.isArray(e))return pick(e[i]);
+  const zero=Object.keys(e).some(k=>norm(k)==='0'),ch=String.fromCharCode(97+i);
+  const names=[LETTERS[i],ch,String(zero?i:i+1),'option'+ch,'option'+(i+1),'opt'+ch,'opt'+(i+1)].map(norm);
+  const k=Object.keys(e).find(k=>names.includes(norm(k)));
+  return k==null?'':pick(e[k]);
+}
+function expBlock(q){
+  const o=q.options||[];let h='';
+  if(getExp(q)==null)return'';
+  [q.answer,...o.map((_,i)=>i).filter(i=>i!==q.answer)].forEach(i=>{
+    if(o[i]==null)return;const ex=expFor(q,i);
+    h+=`<div class="eo"><span class="bub${i===q.answer?' right':''}">${LETTERS[i]||i+1}</span><span>${esc(clean(o[i]))}${ex?': '+esc(ex):''}</span></div>`;});
+  const e=getExp(q);
+  if(typeof e==='object'&&!/: /.test(h.replace(/<[^>]*>/g,'')))h+=`<div class="eo"><span>${esc(fmtAny(e))}</span></div>`;
+  return h?`<div class="exp"><b>ব্যাখ্যা:</b>${h}</div>`:'';
+}
+function tableBlock(q){
+  const t=q.table;if(!nonEmpty(t))return'';
+  let rows;
+  if(typeof t==='string'){
+    rows=t.replace(/\\n/g,'\n').split('\n').map(l=>l.trim()).filter(l=>l&&l.includes('|'))
+      .map(l=>l.replace(/^\||\|$/g,'').split('|').map(c=>c.trim()));
+  }else if(Array.isArray(t)&&t.every(Array.isArray)){rows=t.map(r=>r.map(c=>String(c==null?'':c)));}
+  else return `<div class="tbw"><div class="eo"><span>${esc(fmtAny(t))}</span></div></div>`;
+  rows=rows.filter(r=>!r.every(c=>/^:?-{2,}:?$/.test(c)||c===''));
+  if(!rows.length)return typeof t==='string'?`<div class="tbw"><div class="eo"><span>${esc(t)}</span></div></div>`:'';
+  const n=Math.max(...rows.map(r=>r.length)),cell=(c,tag)=>`<${tag}>${esc(c)}</${tag}>`;
+  const row=(r,tag)=>'<tr>'+Array.from({length:n},(_,i)=>cell(r[i]||'',tag)).join('')+'</tr>';
+  return `<div class="tbw"><table class="tb"><thead>${row(rows[0],'th')}</thead><tbody>${rows.slice(1).map(r=>row(r,'td')).join('')}</tbody></table></div>`;
+}
+function qBlock(q,o){
+  const src=o.src?fmtSrc(q.tags&&q.tags.exams):'',ai=q.answer,opts=q.options||[],sel=SEL[q._serial];
+  const al=(ai!=null&&ai>=0&&ai<LETTERS.length)?LETTERS[ai]:'?';
+  const ansHtml=`<span class="ans${o.ans?'':' hide'}">উ. ${al}</span>`;
+  let h='<div class="opts-grid">';
+  opts.forEach((x,i)=>{const L=LETTERS[i]||String(i+1);let c='opt',m=`(${L})`;
+    if(o.exam){c+=' exam';if(i===sel)c+=' sel';if(o.sub){if(i===ai)c+=' right';else if(i===sel)c+=' wrong';}m=`<span class="bub">${L}</span>`;}
+    h+=`<div class="${c}" data-s="${q._serial}" data-i="${i}">${m} <span class="ot">${esc(clean(x))}</span>${i===opts.length-1?ansHtml:''}</div>`;});
+  h+='</div>';
+  return `<div class="q"><div class="q-head"><span class="q-num">${bn(q._no||q._serial)}.</span> ${esc(q.q||'')}${src?` <span class="q-src">[${esc(src)}]</span>`:''}${o.rev&&q.needs_review?'<span class="review-badge">রিভিউ</span>':''}</div>${h}${o.exp?expBlock(q):''}${o.tbl?tableBlock(q):''}</div>`;
+}
+function vo(){const exam=$('examMode').checked;
+  return{exam,sub:exam&&SUBMITTED,ans:exam?SUBMITTED:$('showAns').checked,src:$('showSrc').checked,rev:$('showReview').checked,exp:$('showExp').checked&&(!exam||SUBMITTED),tbl:$('showTbl').checked&&(!exam||SUBMITTED)};}
+function buildCols(idx,o){
+  const pp=perPage(),s=VIEW.slice(idx*pp,idx*pp+pp),m=Math.ceil(s.length/2);
+  return `<div class="col col-left">${s.slice(0,m).map(q=>qBlock(q,o)).join('')||'&nbsp;'}</div><div class="col col-right">${s.slice(m).map(q=>qBlock(q,o)).join('')||'&nbsp;'}</div>`;
+}
+function fitOptions(root){
+  (root||document).querySelectorAll('.opts-grid').forEach(g=>{
+    g.classList.remove('one');
+    for(const o of g.querySelectorAll('.opt'))if(o.scrollWidth>o.clientWidth+1){g.classList.add('one');break;}
+  });
+}
+function updateStat(){
+  const n=VIEW.length;if(!n){$('stat').textContent='';$('exCount').textContent='';return;}
+  const exam=$('examMode').checked,rv=VIEW.filter(q=>q.needs_review).length;
+  $('stat').innerHTML=(exam?(SUBMITTED?'রেজাল্ট মোড':`উত্তর ${bn(answered())}/${bn(n)}`):`${bn(n)}টি প্রশ্ন`+(SUBJ?' · '+esc(SUBJ):''))+(rv?` · <a id="revLink">রিভিউ ${bn(rv)}</a>`:'');
+  $('exCount').textContent=exam&&!SUBMITTED?`উত্তর ${bn(answered())}/${bn(n)}`:'';
+}
+function render(){
+  const exam=$('examMode').checked,has=DATA.length>0;applyView();renderSubj();
+  $('showAns').disabled=exam;$('examBar').hidden=!exam||!has;
+  $('btnSubmit').textContent=SUBMITTED?'📊 রেজাল্ট দেখো':'✅ সাবমিট এক্সাম';
+  $('cols').classList.toggle('e',!has);
+  if(!has){$('cols').innerHTML='<div class="empty">⚙️ সেটিং থেকে JSON ফাইল আপলোড করুন</div>';$('range').textContent='';$('pnum').textContent='';$('prev').disabled=$('next').disabled=true;updateStat();return;}
+  const pp=perPage(),tp=totalPages();
+  pageIdx=Math.min(Math.max(pageIdx,0),tp-1);
+  const st=pageIdx*pp,en=Math.min(st+pp,VIEW.length);
+  $('cols').innerHTML=buildCols(pageIdx,vo());
+  $('range').textContent=`প্রশ্ন ${bn(st+1)}–${bn(en)} / ${bn(VIEW.length)}`;
+  $('pnum').textContent=`${bn(pageIdx+1)} / ${bn(tp)}`;
+  $('prev').disabled=pageIdx<=0;$('next').disabled=pageIdx>=tp-1;
+  if(document.activeElement!==$('imgPg'))$('imgPg').value=pageIdx+1;
+  try{dbSet('page',pageIdx).catch(()=>{});}catch(_){}
+  const ec=VIEW.filter(q=>getExp(q)!=null).length;
+  $('tblCnt').textContent=`(${bn(VIEW.filter(q=>nonEmpty(q.table)).length)}/${bn(VIEW.length)} প্রশ্নে আছে)`;
+  $('expCnt').textContent=`(${bn(ec)}/${bn(VIEW.length)} প্রশ্নে আছে)`;
+  $('keysInfo').textContent='JSON কী: '+Object.keys(DATA[0]).filter(k=>k!=='_serial').join(', ');
+  updateStat();fitOptions();
+}
+function loadJson(text,name){
+  let d;try{d=JSON.parse(text)}catch(e){alert('JSON পার্স করা যায়নি: '+e.message);return}
+  let topic=name?name.replace(/\.[^.]+$/,''):'';
+  if(!Array.isArray(d)){
+    if(d&&typeof d==='object'){topic=d.topic||d.title||d.name||d.subject||topic;d=d.questions||d.mcq||null;}
+    if(!Array.isArray(d)){alert('JSON একটি array হতে হবে (MCQ তালিকা)');return}
+  }
+  TOPIC=topic;
+  DATA=d.map((q,i)=>Object.assign({},q,{_serial:i+1}));
+  SUBJ='';pageIdx=0;SUBMITTED=false;clearSel();render();closePanel();saveDb();
+}
+$('file').addEventListener('change',ev=>{const f=ev.target.files&&ev.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=()=>loadJson(r.result,f.name);r.readAsText(f,'UTF-8');});
+['examMode','showAns','showExp','showTbl','showSrc','showReview','perPage'].forEach(id=>$(id).addEventListener('change',render));
+
+function go(d){pageIdx+=d;render();window.scrollTo({top:0,behavior:'smooth'});}
+$('prev').onclick=()=>go(-1);$('next').onclick=()=>go(1);
+document.addEventListener('keydown',e=>{
+  if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)||document.querySelector('.modal:not([hidden])'))return;
+  if(e.key==='ArrowLeft')go(-1);if(e.key==='ArrowRight')go(1);});
+let _rz;window.addEventListener('resize',()=>{clearTimeout(_rz);_rz=setTimeout(()=>fitOptions(),120);});
+if(document.fonts){document.fonts.ready.then(()=>fitOptions());document.fonts.addEventListener&&document.fonts.addEventListener('loadingdone',()=>fitOptions());}
+
+/* settings panel */
+const panel=$('panel');
+function closePanel(){panel.classList.remove('open');}
+$('btnGear').addEventListener('click',e=>{e.stopPropagation();panel.classList.toggle('open');});
+panel.addEventListener('click',e=>e.stopPropagation());
+document.addEventListener('click',closePanel);
+
+/* exam mode */
+$('cols').addEventListener('click',e=>{
+  if(!$('examMode').checked||SUBMITTED)return;
+  const el=e.target.closest('.opt.exam');if(!el)return;
+  const s=el.dataset.s,i=+el.dataset.i;
+  if(SEL[s]===i)delete SEL[s];else SEL[s]=i;
+  el.parentNode.querySelectorAll('.opt').forEach(o=>o.classList.toggle('sel',SEL[s]!==undefined&&+o.dataset.i===SEL[s]));
+  updateStat();
+});
+function showResult(){
+  let c=0,w=0,u=0,rows='';
+  VIEW.forEach(q=>{
+    const v=SEL[q._serial];if(v===undefined){u++;return}
+    const ok=v===q.answer;ok?c++:w++;
+    const L=i=>`(${LETTERS[i]||i+1}) ${esc(clean((q.options||[])[i]??''))}`;
+    rows+=`<div class="rr ${ok?'ok':'bad'}"><div><b>${bn(q._no||q._serial)}.</b> ${esc(q.q||'')}</div><div class="rl">${ok?'✔ সঠিক':'✖ ভুল'} · আপনার উত্তর: ${L(v)}${ok?'':`<br>সঠিক উত্তর: ${L(q.answer)}`}</div>${ok?'':expBlock(q)+tableBlock(q)}</div>`;
+  });
+  const a=c+w,neg=parseFloat($('negMark').value)||0,m=Math.round((c-w*neg)*100)/100;
+  $('resBody').innerHTML=`<div class="sum"><div class="g1"><b>${bn(c)}</b>সঠিক</div><div class="g2"><b>${bn(w)}</b>ভুল</div><div class="g3"><b>${bn(u)}</b>বাদ</div><div class="g4"><b>${bn(m)}</b>নম্বর</div></div>
+   <div style="font-size:13px">মোট প্রশ্ন ${bn(VIEW.length)} · উত্তর দেওয়া ${bn(a)}${a?` · নম্বর ${bn(m)} / ${bn(a)} (${bn(Math.round(c/a*100))}% সঠিক)`:''}${neg?` · নেগেটিভ ${bn(neg)}`:''}</div>
+   ${a?rows:'<p>কোনো প্রশ্নের উত্তর দেওয়া হয়নি।</p>'}`;
+  $('resModal').hidden=false;
+}
+$('btnSubmit').onclick=()=>{if(!SUBMITTED){SUBMITTED=true;render();}showResult();};
+$('btnReview').onclick=()=>{$('resModal').hidden=true;window.scrollTo({top:0});};
+$('btnRetry').onclick=()=>{SUBMITTED=false;clearSel();$('resModal').hidden=true;pageIdx=0;render();window.scrollTo({top:0});};
+
+/* review editor */
+function openReview(){
+  const list=VIEW.filter(q=>q.needs_review);
+  $('revBody').innerHTML=list.map(q=>`<div class="re" data-s="${q._serial}"><b>প্রশ্ন ${bn(q._no||q._serial)}</b>
+   <textarea data-f="q">${esc(q.q||'')}</textarea>
+   ${(q.options||[]).map((o,i)=>`<input data-f="o${i}" value="${esc(o)}" placeholder="(${LETTERS[i]||i+1})">`).join('')}
+   <select data-f="answer">${(q.options||[]).map((o,i)=>`<option value="${i}"${i===q.answer?' selected':''}>উত্তর: ${LETTERS[i]||i+1}</option>`).join('')}</select>
+   <textarea data-f="exp" placeholder="ব্যাখ্যা">${esc(typeof q.exp==='string'?q.exp:(q.exp==null?'':JSON.stringify(q.exp)))}</textarea>
+   <label><input type="checkbox" data-f="done"> রিভিউ শেষ</label></div>`).join('')||'<p>কোনো রিভিউ প্রশ্ন নেই</p>';
+  $('revModal').hidden=false;
+}
+$('stat').addEventListener('click',e=>{if(e.target.id==='revLink')openReview();});
+$('revBody').addEventListener('input',e=>{
+  const t=e.target,box=t.closest('.re');if(!box)return;
+  const q=DATA[+box.dataset.s-1],f=t.dataset.f;
+  if(f==='q')q.q=t.value;
+  else if(f==='answer')q.answer=+t.value;
+  else if(f==='done')q.needs_review=!t.checked;
+  else if(f==='exp'){if(q.exp&&typeof q.exp==='object'){try{q.exp=JSON.parse(t.value)}catch(_){}}else q.exp=t.value;}
+  else if(/^o\d+$/.test(f)){q.options=(q.options||[]).slice();q.options[+f.slice(1)]=t.value;}
+  saveDbSoon();
+});
+$('revClose').onclick=()=>{$('revModal').hidden=true;saveDb();render();};
+$('revSave').onclick=()=>{
+  const out=DATA.map(({_serial,_no,...r})=>r);
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(out,null,2)],{type:'application/json'}));
+  a.download=(TOPIC||'mcq')+'.json';a.click();
+};
+
+/* export: PDF (all pages) / image (one page) */
+const H2C='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',JSP='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+const busy=t=>{$('busy').textContent=t||''};
+function lib(src){return new Promise((ok,no)=>{
+  if(document.querySelector(`script[src="${src}"]`))return ok();
+  const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=()=>no(new Error('ইন্টারনেট লাগবে (লাইব্রেরি লোড হয়নি)'));document.head.appendChild(s);});}
+async function snap(idx){
+  const el=document.createElement('div');el.className='page cap';
+  el.innerHTML=`<div class="phead"><div class="hl"><b>MCQ${TOPIC?' · '+esc(TOPIC):''}${SUBJ?' · '+esc(SUBJ):''}</b></div><div class="hr">${bn(idx+1)} / ${bn(totalPages())}</div></div><div class="columns">${buildCols(idx,vo())}</div>`;
+  document.body.appendChild(el);
+  try{if(document.fonts)await document.fonts.ready;fitOptions(el);
+    return await html2canvas(el,{scale:2,backgroundColor:'#faf8f3',useCORS:true});}
+  finally{el.remove();}
+}
+let IMGB=null,IMGN='';
+$('btnImg').onclick=async()=>{
+  if(!DATA.length)return busy('আগে JSON আপলোড করুন');
+  const n=Math.min(Math.max(parseInt($('imgPg').value,10)||pageIdx+1,1),totalPages())-1;
+  try{busy('ইমেজ তৈরি হচ্ছে…');await lib(H2C);const cv=await snap(n);
+    IMGB=await new Promise(r=>cv.toBlob(r,'image/jpeg',.72));IMGN=`mcq-page-${n+1}.jpg`;
+    $('imgEl').src=URL.createObjectURL(IMGB);$('imgInfo').textContent=`(${bn(Math.round(IMGB.size/1024))} KB)`;
+    $('imgModal').hidden=false;busy('');closePanel();
+  }catch(e){busy('ব্যর্থ: '+e.message)}
+};
+const dlBlob=(b,n)=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;a.click();};
+async function shareBlob(b,n,t){
+  const f=new File([b],n,{type:t});
+  if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f]});return}catch(e){if(e.name==='AbortError')return}}
+  dlBlob(b,n);
+}
+$('imgDl').onclick=()=>dlBlob(IMGB,IMGN);$('imgClose').onclick=()=>{$('imgModal').hidden=true;};
+$('imgShare').onclick=()=>shareBlob(IMGB,IMGN,'image/jpeg');
+let PDFB=null,PDFN='';
+$('pdfDl').onclick=()=>dlBlob(PDFB,PDFN);$('pdfClose').onclick=()=>{$('pdfModal').hidden=true;};
+$('pdfShare').onclick=()=>shareBlob(PDFB,PDFN,'application/pdf');
+$('btnPdf').onclick=async()=>{
+  if(!DATA.length)return busy('আগে JSON আপলোড করুন');
+  try{busy('লাইব্রেরি লোড হচ্ছে…');await lib(H2C);await lib(JSP);
+    const{jsPDF}=window.jspdf,tp=totalPages();let pdf;
+    for(let i=0;i<tp;i++){
+      busy(`PDF তৈরি হচ্ছে… ${bn(i+1)}/${bn(tp)}`);
+      const cv=await snap(i),img=cv.toDataURL('image/jpeg',.72);
+      if(!pdf)pdf=new jsPDF('p','pt','a4');else pdf.addPage();
+      const W=pdf.internal.pageSize.getWidth(),H=pdf.internal.pageSize.getHeight(),k=Math.min(W/cv.width,H/cv.height);
+      pdf.addImage(img,'JPEG',(W-cv.width*k)/2,0,cv.width*k,cv.height*k);
+      await new Promise(res=>setTimeout(res));
+    }
+    PDFB=pdf.output('blob');PDFN=`mcq${TOPIC?'-'+TOPIC:''}${SUBJ?'-'+SUBJ:''}.pdf`;$('pdfInfo').textContent=`(${bn(Math.round(PDFB.size/1024))} KB)`;$('pdfModal').hidden=false;busy('');closePanel();
+  }catch(e){busy('ব্যর্থ: '+e.message)}
+};
+
+/* IndexedDB: loaded JSON stays saved on this device */
+let _db;
+const dbOpen=()=>_db||(_db=new Promise((ok,no)=>{const r=indexedDB.open('mcqviewer',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error);}));
+const dbGet=k=>dbOpen().then(d=>new Promise((ok,no)=>{const r=d.transaction('kv').objectStore('kv').get(k);r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error);}));
+const dbSet=(k,v)=>dbOpen().then(d=>new Promise((ok,no)=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=ok;t.onerror=()=>no(t.error);}));
+const saveDb=()=>{try{dbSet('data',{topic:TOPIC,data:DATA.map(({_serial,_no,...r})=>r)}).catch(()=>{});}catch(_){}};
+let _sv;const saveDbSoon=()=>{clearTimeout(_sv);_sv=setTimeout(saveDb,500);};
+$('clrDb').onclick=e=>{e.preventDefault();e.stopPropagation();try{dbSet('data',null).catch(()=>{});dbSet('page',0).catch(()=>{});dbSet('subj','').catch(()=>{});}catch(_){}
+  DATA=[];VIEW=[];SUBJ='';TOPIC='';pageIdx=0;SUBMITTED=false;clearSel();render();closePanel();};
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist();}catch(_){}
+(async()=>{try{
+  const d=await dbGet('data');
+  if(d&&d.data&&d.data.length){TOPIC=d.topic||'';DATA=d.data.map((q,i)=>Object.assign({},q,{_serial:i+1}));pageIdx=(await dbGet('page'))||0;SUBJ=(await dbGet('subj'))||'';render();}
+}catch(_){}})();
+</script>
+</body>
+</html>
