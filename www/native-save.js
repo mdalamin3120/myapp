@@ -12,11 +12,21 @@
   }
   async function nativeSave(href, name) {
     var blob = await (await fetch(href)).blob();
-    var data = await toBase64(blob);
     var P = Capacitor.Plugins;
     var safe = name.replace(/[\\/:*?"<>|]+/g, '_');
-    var f = await P.Filesystem.writeFile({ path: safe, data: data, directory: 'CACHE' });
-    await P.Share.share({ title: safe, url: f.uri, dialogTitle: 'সেভ / শেয়ার' });
+    var CH = 768 * 1024;
+    var uri = null;
+    try { await P.Filesystem.deleteFile({ path: safe, directory: 'CACHE' }); } catch (e) {}
+    for (var off = 0; off < blob.size; off += CH) {
+      var data = await toBase64(blob.slice(off, off + CH));
+      if (uri === null) {
+        var f = await P.Filesystem.writeFile({ path: safe, data: data, directory: 'CACHE' });
+        uri = f.uri;
+      } else {
+        await P.Filesystem.appendFile({ path: safe, data: data, directory: 'CACHE' });
+      }
+    }
+    await P.Share.share({ title: safe, url: uri, dialogTitle: 'সেভ / শেয়ার' });
   }
   function run(a) {
     nativeSave(a.href, a.download || 'file').catch(function (e) {
