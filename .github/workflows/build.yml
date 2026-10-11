@@ -13,6 +13,23 @@ jobs:
           distribution: temurin
           java-version: 17
       - run: npm install
+      - name: Bundle libraries and font for offline use
+        run: |
+          curl -fsSL "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" -o www/html2canvas.min.js
+          curl -fsSL "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" -o www/jspdf.umd.min.js
+          mkdir -p www/fonts
+          curl -fsSL -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36" "https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&display=swap" -o www/fonts/fonts.css
+          i=0
+          for u in $(grep -o 'https://[^)]*' www/fonts/fonts.css | sort -u); do
+            i=$((i+1))
+            curl -fsSL "$u" -o "www/fonts/f$i.woff2"
+            sed -i "s|$u|f$i.woff2|g" www/fonts/fonts.css
+          done
+          test -s www/fonts/f1.woff2
+          sed -i 's|https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&display=swap|fonts/fonts.css|' www/index.html
+          sed -i 's|https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js|html2canvas.min.js|; s|https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js|jspdf.umd.min.js|' www/index.html
+          if grep -q "cdnjs.cloudflare.com\|fonts.googleapis.com" www/index.html; then echo "online links still present"; exit 1; fi
+      - run: sed -i 's|</head>|<script src="native-save.js"></script></head>|' www/index.html
       - run: npx cap add android
       - run: npx cap sync android
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
